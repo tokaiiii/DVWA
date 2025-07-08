@@ -1,0 +1,29 @@
+name: DVWA
+
+on: [push]
+
+jobs:
+  snyk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        run: docker build -t dvwa-image .
+
+      - name: Run Snyk scan
+        uses: snyk/actions/docker@master
+        env:
+          SNYK_TOKEN: ${{ 7f4b1a9f-84e3-46a1-a6dc-be465d7fee00 }}
+        with:
+          image: dvwa-image
+          args: --file=Dockerfile --severity-threshold=high --sarif-file-output=snyk.sarif
+
+      - name: Upload Snyk report to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk.sarif
