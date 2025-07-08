@@ -18,7 +18,7 @@ jobs:
       - name: Run Snyk scan
         uses: snyk/actions/docker@master
         env:
-          SNYK_TOKEN: ${{ 7f4b1a9f-84e3-46a1-a6dc-be465d7fee00 }}
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           image: dvwa-image
           args: --file=Dockerfile --severity-threshold=high --sarif-file-output=snyk.sarif
